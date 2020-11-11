@@ -11,6 +11,8 @@ import org.mybatis.generator.internal.DefaultShellCallback;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +24,25 @@ import java.util.List;
  */
 public class MybatisGenerator {
     List<String> warnings = new ArrayList<>();
-    static File file = null;
+    static File configFile = null;
 //    ConfigurationParser cp =
 //    Configuration conf =
     @BeforeClass
     public static void init(){
-//        file = new File("src/resources/mybatis/generatorConfig.xml");
-//        file = new File("file.xml");
-        file = new File("C:\\Users\\Chenzhimei\\Downloads\\data\\eclipse_project\\simple-maven-project\\src\\main\\resources\\mybatis\\generatorConfig.xml");
+        URL url = MybatisGenerator.class.getClassLoader().getResource("mybatis/generatorConfig.xml");
+        configFile = new File(url.getFile());
+    }
+
+
+
+    @Test
+    public void test(){
+        // 获取URL
+        URL url = getClass().getClassLoader().getResource("mybatis/generatorConfig.xml");
+        // 通过url获取File的绝对路径
+        File f = new File(url.getFile());
+        System.out.println("文件的名子是:" + f.getName());
+        System.out.println("文件的大小是:" + f.length());
     }
 
 
@@ -37,8 +50,6 @@ public class MybatisGenerator {
     public void generate() throws IOException, XMLParserException, InvalidConfigurationException, SQLException, InterruptedException {
         List<String> warnings = new ArrayList<String>();
         boolean overwrite = true;
-        // 指定配置文件
-        File configFile = new File("C:\\Users\\Chenzhimei\\Downloads\\data\\eclipse_project\\simple-maven-project\\src\\main\\resources\\mybatis\\generatorConfig.xml");
         ConfigurationParser cp = new ConfigurationParser(warnings);
         Configuration config = cp.parseConfiguration(configFile);
         DefaultShellCallback callback = new DefaultShellCallback(overwrite);
