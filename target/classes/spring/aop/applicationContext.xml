@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="personServie" class="org.example.proxy.PersonServiceImpl"/>
+    <bean id="transaction" class="org.example.proxy.Transaction"/>
+    <bean id="personServiceProxy" class="org.example.proxy.PersonServiceProxy">
+        <constructor-arg index="0" ref="personServie"></constructor-arg>
+        <constructor-arg index="1" ref="transaction"></constructor-arg>
+    </bean>
+
+
+    <!--目标类-->
+    <bean id="anyClass" class="org.example.spring.aop.AnyClass"/>
+    <bean id="personServiceForSpringAop" class="org.example.spring.aop.PersonServiceImpl"/>
+    <!--切面-->
+    <bean id="transactionForSpringAop" class="org.example.spring.aop.Transaction"/>
+
+    <aop:config>
+<!--    <aop:config proxy-target-class="true">--><!-- 设置proxy-target-class="true"强制使用cglib代理 -->
+        <aop:pointcut id="pointcut" expression="execution(* org.example.spring.aop.*.*(..))"/>
+        <aop:aspect ref="transactionForSpringAop">
+            <aop:before method="beginTransaction" pointcut-ref="pointcut"/>
+            <aop:after method="commit" pointcut-ref="pointcut"/>
+        </aop:aspect>
+    </aop:config>
+</beans>

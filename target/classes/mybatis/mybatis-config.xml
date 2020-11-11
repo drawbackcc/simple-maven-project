@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<!--    Mybatis九大类全局配置节点按照如下顺序排序，位置不能颠倒。-->
+<!--    properties=>settings=>typeAliases=>typeHandlers=>objectFactory=>plugins=>environment=>databaseIdProvider=>mappers-->
+
+    <properties resource="mybatis/db.properties"/>
+    
+    <settings>
+        <!-- 开启全局懒加载 默认为true-->
+<!--        <setting name="lazyLoadingEnabled" value="true"/>-->
+        <!-- 关闭立即加载，默认为false -->
+<!--        <setting name="aggressiveLazyLoading" value="false"/>-->
+        <!-- 开启全局缓存 默认为true-->
+        <setting name="cacheEnabled" value="true"/>
+        <!--配置默认的执行器。
+            SIMPLE 就是普通的执行器；
+            REUSE 执行器会重用预处理语句（prepared statements）；
+            BATCH 执行器将重用语句并执行批量更新。默认值为SIMPLE -->
+        <setting name="defaultExecutorType" value="SIMPLE"/>
+        <!--指定 MyBatis 增加到日志名称的前缀-->
+<!--        <setting name="logPrefix" value="log"/>-->
+        <!--指定 MyBatis 所用日志的具体实现，未指定时将自动查找
+            SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING。 -->
+        <setting name="logImpl" value="LOG4J"/>
+    </settings>
+
+    <typeAliases>
+        <!-- 批量别名定义，扫描整个包下的类，别名为类名（大小写不敏感） -->
+        <package name="org.example.mybatis.entity"/>
+        <!-- 设置具体某类的别名 -->
+        <!-- <typeAlias type="com.sample.bean.Student" alias="Student"/>   -->
+    </typeAliases>
+
+    <plugins>
+        <!-- 分页插件 -->
+        <plugin interceptor="com.github.pagehelper.PageInterceptor"/>
+        <!-- 二级缓存插件ehcache -->
+
+<!--        <plugin interceptor="org.example.mybatis.interceptor.MyInterceptor">-->
+<!--            <property name="name" value="zhangsan"/>-->
+<!--            <property name="age" value="23"/>-->
+<!--        </plugin>-->
+    </plugins>
+    
+    <environments default="mysqlDev">
+        <!--可以在这里配置多个数据库环境，在mapper文件里的select等标签里编写databaseId属性-->
+        <environment id="mysqlDev">
+            <transactionManager type="JDBC"/>
+            <!-- 配置数据库连接信息 -->
+            <dataSource type="POOLED">
+                <property name="driver" value="${mysql.Driver}"/>
+                <property name="url" value="${mysql.url}"/>
+                <property name="username" value="${mysql.username}"/>
+                <property name="password" value="${mysql.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!-- 加载映射文件 -->
+    <mappers>
+<!--        注释编写sql语句-->
+<!--        <package name="org.example.mybatis.mapper"/>-->
+
+        <mapper resource="mybatis/mapper/UserMapper.xml"/>
+    </mappers>
+</configuration>
